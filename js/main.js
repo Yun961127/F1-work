@@ -30,7 +30,7 @@
         <h3>${esc(t.name)}</h3>
         <p class="sub">${esc(t.firstSeason)} 年参赛 · ${esc(t.engine)}</p>
         <p class="row"><b>车队冠军：</b>${esc(t.constructorTitles)}</p>
-        <p class="row"><b>2025 车手：</b>${esc(t.drivers2025)}</p>
+        <p class="row"><b>当前车手：</b>${esc(t.drivers)}</p>
       </a>`;
   }
 
@@ -39,8 +39,8 @@
       <a class="card" href="detail.html?type=drivers&id=${d.id}" style="--accent:var(--accent)">
         <span class="driver-number">#${esc(d.number)}</span>
         <h3>${esc(d.name)}</h3>
-        <p class="sub">${esc(d.country)} · ${esc(d.birthYear)} 年生</p>
-        <p class="row"><b>2025 车队：</b>${esc(d.team2025)}</p>
+        <p class="sub">${esc(d.country)} · ${esc(d.birthDate.substring(0, 4))} 年生</p>
+        <p class="row"><b>当前车队：</b>${esc(d.team)}</p>
         <p class="row"><b>世界冠军：</b>${esc(d.championships)}</p>
       </a>`;
   }
@@ -125,7 +125,7 @@
             <div class="item"><div class="k">首次参赛</div><div class="v">${esc(t.firstSeason)}</div></div>
             <div class="item"><div class="k">动力单元</div><div class="v">${esc(t.engine)}</div></div>
             <div class="item"><div class="k">车队冠军</div><div class="v">${esc(t.constructorTitles)}</div></div>
-            <div class="item"><div class="k">2025 车手</div><div class="v">${esc(t.drivers2025)}</div></div>
+            <div class="item"><div class="k">当前车手</div><div class="v">${esc(t.drivers)}</div></div>
           </div>
           <div class="section-title">代表性车手</div>
           <div class="chip-list">
@@ -141,7 +141,7 @@
       <div class="detail-card">
         <div class="detail-hero">
           <h1>#${esc(d.number)} ${esc(d.name)}</h1>
-          <div class="hero-sub">${esc(d.country)} · ${esc(d.birthYear)} 年生</div>
+          <div class="hero-sub">${esc(d.country)} · ${esc(d.birthPlace)} · ${esc(d.debutYear)} 年出道</div>
         </div>
         <div class="detail-body">
           <p>${esc(d.bio)}</p>
@@ -149,8 +149,10 @@
           <div class="kv">
             <div class="item"><div class="k">车号</div><div class="v">#${esc(d.number)}</div></div>
             <div class="item"><div class="k">国籍</div><div class="v">${esc(d.country)}</div></div>
-            <div class="item"><div class="k">出生年份</div><div class="v">${esc(d.birthYear)}</div></div>
-            <div class="item"><div class="k">2025 车队</div><div class="v">${esc(d.team2025)}</div></div>
+            <div class="item"><div class="k">出生日期</div><div class="v">${esc(d.birthDate)}</div></div>
+            <div class="item"><div class="k">出生地</div><div class="v">${esc(d.birthPlace)}</div></div>
+            <div class="item"><div class="k">当前车队</div><div class="v">${esc(d.team)}</div></div>
+            <div class="item"><div class="k">F1 出道</div><div class="v">${esc(d.debutYear)} 年</div></div>
             <div class="item"><div class="k">世界冠军</div><div class="v">${esc(d.championships)}</div></div>
           </div>
         </div>
