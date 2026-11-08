@@ -1,19 +1,21 @@
 // ============================================================
 // F1 檔案庫 —— 排行榜 / 積分（Jolpica F1 API）
-// 說明：純前端 fetch，每 60 秒自動刷新，也可手動刷新。
+// 說明：純前端 fetch，先顯示 localStorage 緩存再後台更新，
+//       自動刷新間隔 5 分鐘，也可手動刷新。
 // ============================================================
 
 (function () {
   "use strict";
 
   var API_BASE = "https://api.jolpi.ca/ergast/f1/current";
+  var CACHE_PREFIX = "f1_standings_cache_";
   var currentType = "drivers";
 
   // 國籍中文化映射
   var NAT = {
     British: "英國", German: "德國", Italian: "義大利", Austrian: "奧地利",
     French: "法國", American: "美國", Swiss: "瑞士", Japanese: "日本",
-    Australian: "澳大利亞", Dutch: "荷蘭", Spanish: "西班牙", Monegasque: "摩納哥",
+    Australian: "澳洲", Dutch: "荷蘭", Spanish: "西班牙", Monegasque: "摩納哥",
     Canadian: "加拿大", Thai: "泰國", Brazilian: "巴西", Finnish: "芬蘭",
     Mexican: "墨西哥", Danish: "丹麥", "New Zealander": "紐西蘭", Chinese: "中國",
     Argentine: "阿根廷", Belgian: "比利時", Swedish: "瑞典", Russian: "俄羅斯"
@@ -39,13 +41,39 @@
     return zh ? esc(n) + ' <span class="zh">（' + esc(zh) + '）</span>' : esc(n);
   }
 
+  // ---------- 緩存 ----------
+  function cacheKey(type) { return CACHE_PREFIX + type; }
+  function readCache(type) {
+    try {
+      const raw = localStorage.getItem(cacheKey(type));
+      if (!raw) return null;
+      const c = JSON.parse(raw);
+      if (c && c.rows && c.rows.length) return c;
+    } catch (e) { /* ignore */ }
+    return null;
+  }
+  function writeCache(type, season, round, rows, prev) {
+    try {
+      localStorage.setItem(cacheKey(type), JSON.stringify({
+        season: season, round: round, rows: rows, prev: prev, savedAt: Date.now()
+      }));
+    } catch (e) { /* ignore */ }
+  }
+
+  function rowsOf(type, list) {
+    return type === "drivers" ? (list.DriverStandings || []) : (list.ConstructorStandings || []);
+  }
+
   function load(type) {
     currentType = type;
     document.querySelectorAll(".tab").forEach(function (b) {
       b.classList.toggle("active", b.dataset.type === type);
     });
     $("#error").hidden = true;
-    $("#tbody").innerHTML = '<tr><td colspan="5" class="loading">載入中…</td></tr>';
+
+    // 先顯示緩存
+    var cache = readCache(type);
+    if (cache) renderStandings(type, cache.rows, cache.prev, cache.season, cache.round);
 
     var url = type === "drivers"
       ? API_BASE + "/driverstandings.json"
@@ -57,37 +85,32 @@
         return res.json();
       })
       .then(function (data) {
-        var table = data.MRData.StandingsTable;
-        var list = table.StandingsLists && table.StandingsLists[0];
+        var list = data.MRData.StandingsTable.StandingsLists[0];
         if (!list) throw new Error("本賽季暫無積分數據");
-
         var season = list.season;
         var round = parseInt(list.round, 10);
-        var rows = type === "drivers"
-          ? (list.DriverStandings || [])
-          : (list.ConstructorStandings || []);
+        var rows = rowsOf(type, list);
 
-        $("#season-info").textContent = season + " 賽季 · 第 " + round + " 輪後";
-        $("#updated").textContent =
-          "最後更新：" + new Date().toLocaleTimeString("zh-TW", { hour12: false });
-
-        // 再取上一輪積分，計算名次變化（↑↓）
         if (round > 1) {
           fetch(url + "?round=" + (round - 1))
             .then(function (r2) { return r2.json(); })
             .then(function (d2) {
               var l2 = d2.MRData.StandingsTable.StandingsLists[0];
-              var prev = l2
-                ? (type === "drivers" ? l2.DriverStandings : l2.ConstructorStandings)
-                : null;
-              renderStandings(type, rows, prev);
+              var prev = l2 ? rowsOf(type, l2) : null;
+              writeCache(type, season, round, rows, prev);
+              renderStandings(type, rows, prev, season, round);
             })
-            .catch(function () { renderStandings(type, rows, null); });
+            .catch(function () {
+              writeCache(type, season, round, rows, null);
+              renderStandings(type, rows, null, season, round);
+            });
         } else {
-          renderStandings(type, rows, null);
+          writeCache(type, season, round, rows, null);
+          renderStandings(type, rows, null, season, round);
         }
       })
       .catch(function (e) {
+        if (cache) return; // 已有緩存顯示，忽略刷新失敗
         $("#tbody").innerHTML = "";
         $("#error").hidden = false;
         $("#error").textContent = "載入失敗：" + e.message + "（請檢查網路後點擊刷新重試）";
@@ -95,14 +118,18 @@
       });
   }
 
-  function renderStandings(type, rows, prev) {
-    // prev: 上一輪的行，用於計算名次變化
+  function renderStandings(type, rows, prev, season, round) {
     var prevMap = {};
     if (prev) {
       prev.forEach(function (p) {
         var id = type === "drivers" ? p.Driver.driverId : p.Constructor.constructorId;
         prevMap[id] = parseInt(p.position, 10);
       });
+    }
+    if (season) {
+      $("#season-info").textContent = season + " 賽季 · 第 " + round + " 輪後";
+      $("#updated").textContent =
+        "最後更新：" + new Date().toLocaleTimeString("zh-TW", { hour12: false });
     }
     if (type === "drivers") renderDrivers(rows, prevMap);
     else renderConstructors(rows, prevMap);
@@ -172,7 +199,7 @@
   });
   $("#refresh").addEventListener("click", function () { load(currentType); });
 
-  // 初始載入 + 每 60 秒自動刷新
+  // 初始載入 + 每 5 分鐘自動刷新
   load("drivers");
-  setInterval(function () { load(currentType); }, 60000);
+  setInterval(function () { load(currentType); }, 5 * 60 * 1000);
 })();
