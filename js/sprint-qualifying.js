@@ -1,5 +1,5 @@
 // F1 檔案庫 —— 衝刺排位賽結果（靜態資料，來源：維基百科公開賽果）
-window.SPRINT_QUALIFYING = {
+window.SPRINT_QUALIFYING = { season: 2026, data: {
   "2": [
     { pos: 1, name: "George Russell", id: "george-russell" },
     { pos: 2, name: "Kimi Antonelli", id: "kimi-antonelli" },
@@ -113,4 +113,4 @@ window.SPRINT_QUALIFYING = {
     { pos: 21, name: "Sergio Pérez", id: "sergio-perez" },
     { pos: 22, name: "Fernando Alonso", id: "fernando-alonso" },
   ],
-};
+} };

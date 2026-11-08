@@ -171,8 +171,9 @@
     // 賽道資訊
     html += circuitCard(race);
 
-    // 衝刺排位賽（靜態）
-    var sq = (window.SPRINT_QUALIFYING && window.SPRINT_QUALIFYING[race.round]) || [];
+    // 衝刺排位賽（靜態資料，僅當資料屬於本賽季時才顯示）
+    var sqAll = window.SPRINT_QUALIFYING || {};
+    var sq = (sqAll.season === Number(season) && sqAll.data) ? (sqAll.data[race.round] || []) : [];
     if (sq.length) {
       html += sessionCard(
         "衝刺排位賽", "決定衝刺賽發車順序",
@@ -218,7 +219,7 @@
 
   // 賽道資訊卡片
   function circuitCard(race) {
-    var info = (window.CIRCUIT_INFO && window.CIRCUIT_INFO[race.round]) || {};
+    var info = (window.CIRCUIT_INFO && window.CIRCUIT_INFO[race.circuitId]) || {};
     var cName = zh(window.F1_ZH.circuits, race.circuitName, race.circuitName);
     var cCountry = zh(window.F1_ZH.nations, race.country, race.country);
     var locality = race.locality ? zh(window.F1_ZH.nations, race.locality, race.locality) : "";
