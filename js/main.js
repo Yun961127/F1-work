@@ -37,6 +37,21 @@
     "cadillac": "CAD"
   };
 
+  // 车队名称 -> 队色（让车手占位图也显示所属车队颜色）
+  const TEAM_COLOR = {
+    "Red Bull": "#3671C6",
+    "Ferrari": "#E8002D",
+    "McLaren": "#FF8000",
+    "Mercedes": "#27F4D2",
+    "Aston Martin": "#229971",
+    "Alpine": "#0093CC",
+    "Williams": "#64C4FF",
+    "RB F1 Team": "#6692FF",
+    "Haas": "#B6BABD",
+    "Audi": "#BB0A30",
+    "Cadillac": "#C5B47D"
+  };
+
   // 车队图标：有 img/teams/{id}.png 则显示图片，否则显示「队色 + 缩写」占位圆标
   function teamLogo(t, size) {
     const code = TEAM_CODE[t.id] || t.name.slice(0, 3).toUpperCase();
@@ -47,21 +62,22 @@
       </span>`;
   }
 
-  // 现役车手照片：有 img/drivers/{id}.jpg 则显示，否则显示车号占位
+  // 现役车手照片：有 img/drivers/{id}.jpg 则显示，否则显示「队色 + 车号」占位
   function driverPhoto(d, size) {
+    const color = TEAM_COLOR[d.team] || "#3a3e4e";
     return `
       <span class="logo-wrap ${size}">
-        <span class="logo-badge" style="--accent:var(--accent)">#${esc(d.number)}</span>
+        <span class="logo-badge" style="--accent:${color}">#${esc(d.number)}</span>
         <img class="logo-img cover-img" src="img/drivers/${d.id}.jpg" alt="${esc(d.name)}" loading="lazy" onerror="this.style.display='none'">
       </span>`;
   }
 
-  // 退役车手照片：无图片时显示姓名首字母占位
+  // 退役车手照片：无图片时显示「金色 + 姓名首字母」占位
   function retiredPhoto(r, size) {
     const initials = r.name.split(" ").map(function (w) { return w.charAt(0); }).join("").slice(0, 2).toUpperCase();
     return `
       <span class="logo-wrap ${size}">
-        <span class="logo-badge" style="--accent:var(--accent)">${esc(initials)}</span>
+        <span class="logo-badge" style="--accent:#C9A227">${esc(initials)}</span>
         <img class="logo-img cover-img" src="img/drivers/${r.id}.jpg" alt="${esc(r.name)}" loading="lazy" onerror="this.style.display='none'">
       </span>`;
   }
