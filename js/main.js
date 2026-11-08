@@ -22,6 +22,16 @@
       .replace(/>/g, "&gt;");
   }
 
+  // 名称 + 官方中文译名，例如「Max Verstappen（馬克斯・維斯塔潘）」
+  function withZh(name, dict) {
+    const zh = dict && dict[name];
+    return zh
+      ? esc(name) + ' <span class="zh">（' + esc(zh) + '）</span>'
+      : esc(name);
+  }
+  function teamName(t) { return withZh(t.name, window.F1_ZH && window.F1_ZH.teams); }
+  function driverName(d) { return withZh(d.name, window.F1_ZH && window.F1_ZH.drivers); }
+
   // 车队三字缩写（用于无图标时的占位图）
   const TEAM_CODE = {
     "red-bull": "RBR",
@@ -115,7 +125,7 @@
         <div class="card-head">
           ${teamLogo(t, "sm")}
           <div class="card-head-text">
-            <h3>${esc(t.name)}</h3>
+            <h3>${teamName(t)}</h3>
             <span class="badge">${esc(t.country)}</span>
           </div>
         </div>
@@ -131,7 +141,7 @@
         <div class="card-head">
           ${driverPhoto(d, "sm")}
           <div class="card-head-text">
-            <h3>${esc(d.name)}</h3>
+            <h3>${driverName(d)}</h3>
             <span class="driver-number">#${esc(d.number)} · ${esc(d.country)}</span>
           </div>
         </div>
@@ -147,7 +157,7 @@
         <div class="card-head">
           ${retiredPhoto(r, "sm")}
           <div class="card-head-text">
-            <h3>${esc(r.name)}</h3>
+            <h3>${driverName(r)}</h3>
             <span class="badge">${esc(r.country)}</span>
           </div>
         </div>
@@ -217,7 +227,7 @@
           <div class="hero-flex">
             ${teamLogo(t, "lg")}
             <div>
-              <h1>${esc(t.name)}</h1>
+              <h1>${teamName(t)}</h1>
               <div class="hero-sub">${esc(t.fullName)} · ${esc(t.country)}</div>
             </div>
           </div>
@@ -249,7 +259,7 @@
           <div class="hero-flex">
             ${driverPhoto(d, "lg")}
             <div>
-              <h1>#${esc(d.number)} ${esc(d.name)}</h1>
+              <h1>#${esc(d.number)} ${driverName(d)}</h1>
               <div class="hero-sub">${esc(d.country)} · ${esc(d.birthPlace)} · ${esc(d.debutYear)} 年出道</div>
             </div>
           </div>
@@ -278,7 +288,7 @@
           <div class="hero-flex">
             ${retiredPhoto(r, "lg")}
             <div>
-              <h1>${esc(r.name)}</h1>
+              <h1>${driverName(r)}</h1>
               <div class="hero-sub">${esc(r.country)} · ${esc(r.birthYear)} 年生</div>
             </div>
           </div>

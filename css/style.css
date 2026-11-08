@@ -17,7 +17,8 @@
 html { scroll-behavior: smooth; }
 
 body {
-  font-family: "Segoe UI", "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", system-ui, sans-serif;
+  font-family: "Noto Sans TC", "Microsoft JhengHei", "微軟正黑體", "PingFang TC",
+    "Heiti TC", "Segoe UI", system-ui, sans-serif;
   background: var(--bg);
   color: var(--text);
   line-height: 1.7;
@@ -491,6 +492,14 @@ tr.race-today .race-name { color: #ff6a66; }
 /* ---------- 详情页互链 ---------- */
 .detail-link { color: #ff6a66; font-weight: 600; }
 .detail-link:hover { text-decoration: underline; }
+
+/* ---------- 中文译名 ---------- */
+.zh {
+  color: var(--text-dim);
+  font-weight: 500;
+  font-size: 0.78em;
+  letter-spacing: 0;
+}
 
 /* ---------- 回到顶部按钮 ---------- */
 .back-top {

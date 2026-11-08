@@ -28,6 +28,17 @@
 
   function nat(n) { return NAT[n] || n || "—"; }
 
+  // 车手 / 车队名称 + 中文译名
+  function zhDriver(d) {
+    const full = d.givenName + " " + d.familyName;
+    const zh = window.F1_ZH && window.F1_ZH.drivers ? window.F1_ZH.drivers[full] : null;
+    return zh ? esc(full) + ' <span class="zh">（' + esc(zh) + '）</span>' : esc(full);
+  }
+  function zhTeam(n) {
+    const zh = window.F1_ZH && window.F1_ZH.teams ? window.F1_ZH.teams[n] : null;
+    return zh ? esc(n) + ' <span class="zh">（' + esc(zh) + '）</span>' : esc(n);
+  }
+
   function load(type) {
     currentType = type;
     document.querySelectorAll(".tab").forEach(function (b) {
@@ -122,9 +133,9 @@
         '<tr>' +
         '<td class="pos pos-' + esc(r.position) + '">' + esc(r.position) + ' ' +
         arrowCell(cur, prevMap[r.Driver.driverId]) + '</td>' +
-        '<td><b>' + esc(r.Driver.givenName) + ' ' + esc(r.Driver.familyName) + '</b>' +
+        '<td><b>' + zhDriver(r.Driver) + '</b>' +
         '<span class="num-badge">#' + esc(num) + '</span></td>' +
-        '<td>' + esc(team) + '</td>' +
+        '<td>' + zhTeam(team) + '</td>' +
         '<td class="num pts">' + esc(r.points) + ' ' + gapText + '</td>' +
         '<td class="num">' + esc(r.wins) + '</td>' +
         '</tr>'
@@ -146,7 +157,7 @@
         '<tr>' +
         '<td class="pos pos-' + esc(r.position) + '">' + esc(r.position) + ' ' +
         arrowCell(cur, prevMap[r.Constructor.constructorId]) + '</td>' +
-        '<td><b>' + esc(r.Constructor.name) + '</b></td>' +
+        '<td><b>' + zhTeam(r.Constructor.name) + '</b></td>' +
         '<td>' + esc(nat(r.Constructor.nationality)) + '</td>' +
         '<td class="num pts">' + esc(r.points) + ' ' + gapText + '</td>' +
         '<td class="num">' + esc(r.wins) + '</td>' +

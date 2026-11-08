@@ -1,6 +1,9 @@
 // ============================================================
 // F1 档案库 —— 赛程与比赛结果（Jolpica F1 API）
-// 合并「赛程表」与「比赛结果」：已完赛显示前三名，未开始显示日期。
+// 说明：
+// 1. 站名、赛道、国家直接显示中文译名（映射见 js/i18n.js）。
+// 2. 已完赛显示前三名（中文译名），未来比赛显示开赛日期。
+// 3. current/results 端点数据不全时，逐轮补查缺失轮次的结果。
 // ============================================================
 
 (function () {
@@ -8,22 +11,23 @@
 
   var API_BASE = "https://api.jolpi.ca/ergast/f1/current";
 
-  var NAT = {
-    British: "英国", German: "德国", Italian: "意大利", Austrian: "奥地利",
-    French: "法国", American: "美国", Swiss: "瑞士", Japanese: "日本",
-    Australian: "澳大利亚", Dutch: "荷兰", Spanish: "西班牙", Monegasque: "摩纳哥",
-    Canadian: "加拿大", Thai: "泰国", Brazilian: "巴西", Finnish: "芬兰",
-    Mexican: "墨西哥", Danish: "丹麦", "New Zealander": "新西兰", Chinese: "中国",
-    Argentine: "阿根廷", Belgian: "比利时", Swedish: "瑞典", Russian: "俄罗斯",
-    Hungarian: "匈牙利", Singaporean: "新加坡", Azerbaijani: "阿塞拜疆",
-    Bahraini: "巴林", Malaysian: "马来西亚", Qatari: "卡塔尔",
-    "United Arab Emirates": "阿联酋"
-  };
-
   function $(sel) { return document.querySelector(sel); }
   function esc(s) {
     return String(s == null ? "" : s)
       .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  function zh(map, key, fallback) {
+    if (window.F1_ZH && map && map[key]) return map[key];
+    return fallback;
+  }
+
+  // 车手译名只取「姓氏」部分，例如 馬克斯・維斯塔潘 -> 維斯塔潘
+  function driverShortZh(given, family) {
+    var full = given + " " + family;
+    var t = zh(window.F1_ZH.drivers, full, null);
+    if (t) return t.split(/[・·]/).pop();
+    return family;
   }
 
   function fmtDate(iso) {
@@ -48,19 +52,35 @@
     ])
       .then(function (res) {
         var races = res[0].MRData.RaceTable.Races || [];
+        var season = res[0].MRData.RaceTable.season;
         var resultsByRound = {};
         (res[1].MRData.RaceTable.Races || []).forEach(function (r) {
           resultsByRound[r.round] = r.Results || [];
         });
 
-        $("#season-info").textContent = res[0].MRData.RaceTable.season + " 赛季 · 共 " + races.length + " 站";
-        $("#updated").textContent =
-          "最后更新：" + new Date().toLocaleTimeString("zh-TW", { hour12: false });
-
         var today = new Date().toISOString().slice(0, 10);
-        $("#tbody").innerHTML = races.map(function (r) {
-          return raceRow(r, resultsByRound[r.round], today);
-        }).join("");
+        // 找出「已过日期但结果缺失」的轮次，逐轮补查
+        var missing = races
+          .filter(function (r) { return !resultsByRound[r.round] && r.date && r.date <= today; })
+          .map(function (r) { return r.round; });
+
+        var finish = function () { renderAll(races, resultsByRound, today, season); };
+
+        if (!missing.length) { finish(); return; }
+
+        Promise.all(missing.map(function (round) {
+          return fetch("https://api.jolpi.ca/ergast/f1/" + season + "/" + round + "/results.json")
+            .then(function (x) { return x.json(); })
+            .catch(function () { return null; });
+        }))
+          .then(function (extra) {
+            extra.forEach(function (d) {
+              if (!d) return;
+              var rr = d.MRData && d.MRData.RaceTable && d.MRData.RaceTable.Races;
+              if (rr && rr.length && rr[0].Results) resultsByRound[rr[0].round] = rr[0].Results;
+            });
+            finish();
+          });
       })
       .catch(function (e) {
         $("#tbody").innerHTML = "";
@@ -70,15 +90,27 @@
       });
   }
 
+  function renderAll(races, resultsByRound, today, season) {
+    $("#season-info").textContent = season + " 赛季 · 共 " + races.length + " 站";
+    $("#updated").textContent =
+      "最后更新：" + new Date().toLocaleTimeString("zh-TW", { hour12: false });
+    $("#tbody").innerHTML = races.map(function (r) {
+      return raceRow(r, resultsByRound[r.round], today);
+    }).join("");
+  }
+
   function raceRow(r, results, today) {
-    var circuit = r.Circuit ? r.Circuit.circuitName : "—";
-    var country = r.Circuit && r.Circuit.Location ? natText(r.Circuit.Location.country) : "";
+    var raceName = zh(window.F1_ZH.races, r.raceName, r.raceName);
+    var circuit = r.Circuit ? zh(window.F1_ZH.circuits, r.Circuit.circuitName, r.Circuit.circuitName) : "—";
+    var country = r.Circuit && r.Circuit.Location
+      ? zh(window.F1_ZH.nations, r.Circuit.Location.country, r.Circuit.Location.country)
+      : "";
 
     var resultHtml;
     if (results && results.length) {
       var top3 = results.slice(0, 3).map(function (x) {
         return '<span class="p' + esc(x.position) + '">' + esc(x.position) + '. ' +
-          esc(x.Driver.givenName) + " " + esc(x.Driver.familyName) + '</span>';
+          esc(driverShortZh(x.Driver.givenName, x.Driver.familyName)) + '</span>';
       }).join(" ");
       resultHtml = '<span class="results-line">' + top3 + '</span>';
     } else if (r.date && r.date > today) {
@@ -87,20 +119,16 @@
       resultHtml = '<span class="upcoming">结果待公布</span>';
     }
 
-    var highlight = "";
-
     return (
       '<tr' + (r.date === today ? ' class="race-today"' : "") + '>' +
       '<td class="pos">R' + esc(r.round) + '</td>' +
       '<td>' + esc(fmtDate(r.date)) + '</td>' +
-      '<td><b class="race-name">' + esc(r.raceName) + '</b></td>' +
+      '<td><b class="race-name">' + esc(raceName) + '</b></td>' +
       '<td>' + esc(circuit) + (country ? ' · ' + esc(country) : '') + '</td>' +
       '<td>' + resultHtml + '</td>' +
       '</tr>'
     );
   }
-
-  function natText(n) { return NAT[n] || n || ""; }
 
   $("#refresh").addEventListener("click", load);
   load();

@@ -8,6 +8,16 @@
   var box = document.getElementById("countdown");
   if (!box) return;
 
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  function zh(map, key, fallback) {
+    if (window.F1_ZH && map && map[key]) return map[key];
+    return fallback;
+  }
+
   function fmtMonthDay(iso) {
     var p = iso.split("-");
     return p.length === 3 ? parseInt(p[1], 10) + "月" + parseInt(p[2], 10) + "日" : iso;
@@ -42,10 +52,11 @@
 
       box.innerHTML =
         '<span class="cd-label">下一站</span>' +
-        '<span class="cd-race">R' + next.round + " · " + next.raceName + '</span>' +
+        '<span class="cd-race">R' + next.round + " · " +
+        esc(zh(window.F1_ZH.races, next.raceName, next.raceName)) + '</span>' +
         '<span class="cd-days">' + diffText + '</span>' +
         '<span class="cd-date">' + fmtMonthDay(next.date) + " · " +
-        (next.Circuit ? next.Circuit.circuitName : "") + '</span>';
+        esc(next.Circuit ? zh(window.F1_ZH.circuits, next.Circuit.circuitName, next.Circuit.circuitName) : "") + '</span>';
     })
     .catch(function () {
       box.innerHTML = '<span class="cd-label">赛程加载失败，请稍后刷新</span>';
