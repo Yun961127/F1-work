@@ -23,30 +23,19 @@
     <div class="page-head">
       <div class="breadcrumb"><a href="index.html">首頁</a> / 賽程</div>
       <h1>賽程與比賽結果</h1>
-      <p>全年賽程來自 Jolpica F1 API。已結束的比賽顯示前三名，未來的比賽顯示開賽日期。</p>
+      <p>每一站大獎賽一個分頁，包含賽道資訊、衝刺排位賽、衝刺賽、排位賽與正賽的完整排名。點擊車手姓名可查看車手資訊。</p>
     </div>
 
-    <div class="standings-meta">
-      <span id="season-info">載入中…</span>
-      <span id="updated"></span>
-      <button class="btn" id="refresh">刷新</button>
-    </div>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th>輪次</th><th>日期</th><th>大獎賽</th><th>賽道</th><th>結果</th></tr>
-        </thead>
-        <tbody id="tbody"></tbody>
-      </table>
-    </div>
-
+    <div class="round-tabs" id="round-tabs"></div>
     <div class="error-box" id="error" hidden></div>
+    <div id="round-detail"></div>
   </main>
 
-  <footer>F1 檔案庫 · 賽程數據來源：Jolpica F1 API · <a href="https://github.com/Yun961127/F1-work" target="_blank" rel="noopener">GitHub</a></footer>
+  <footer>F1 檔案庫 · 賽程與賽道資料來源：Jolpica F1 API、維基百科 · <a href="https://github.com/Yun961127/F1-work" target="_blank" rel="noopener">GitHub</a></footer>
   <script src="js/common.js"></script>
   <script src="js/i18n.js"></script>
+  <script src="js/circuit-info.js"></script>
+  <script src="js/sprint-qualifying.js"></script>
   <script src="js/schedule.js"></script>
 </body>
 </html>
