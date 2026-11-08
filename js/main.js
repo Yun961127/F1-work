@@ -52,6 +52,32 @@
     "Cadillac": "#C5B47D"
   };
 
+  // 车队名称 -> 车队 id（用于详情页互链）
+  const TEAM_ID_BY_NAME = {
+    "Red Bull": "red-bull",
+    "Ferrari": "ferrari",
+    "McLaren": "mclaren",
+    "Mercedes": "mercedes",
+    "Aston Martin": "aston-martin",
+    "Alpine": "alpine",
+    "Williams": "williams",
+    "RB F1 Team": "racing-bulls",
+    "Haas": "haas",
+    "Audi": "audi",
+    "Cadillac": "cadillac"
+  };
+
+  // 根据车队 id 找出当前阵容（用于车队详情页显示车手链接）
+  function driversOfTeam(teamId) {
+    return DATA.drivers.filter(function (d) {
+      return TEAM_ID_BY_NAME[d.team] === teamId;
+    });
+  }
+
+  function driverLink(d) {
+    return '<a class="detail-link" href="detail.html?type=drivers&id=' + d.id + '">' + esc(d.name) + '</a>';
+  }
+
   // 车队图标：有 img/teams/{id}.png 则显示图片，否则显示「队色 + 缩写」占位圆标
   function teamLogo(t, size) {
     const code = TEAM_CODE[t.id] || t.name.slice(0, 3).toUpperCase();
@@ -205,7 +231,7 @@
             <div class="item"><div class="k">首次参赛</div><div class="v">${esc(t.firstSeason)}</div></div>
             <div class="item"><div class="k">动力单元</div><div class="v">${esc(t.engine)}</div></div>
             <div class="item"><div class="k">车队冠军</div><div class="v">${esc(t.constructorTitles)}</div></div>
-            <div class="item"><div class="k">当前车手</div><div class="v">${esc(t.drivers)}</div></div>
+            <div class="item"><div class="k">当前车手</div><div class="v">${driversOfTeam(t.id).map(driverLink).join("、") || esc(t.drivers)}</div></div>
           </div>
           <div class="section-title">代表性车手</div>
           <div class="chip-list">
@@ -236,7 +262,7 @@
             <div class="item"><div class="k">国籍</div><div class="v">${esc(d.country)}</div></div>
             <div class="item"><div class="k">出生日期</div><div class="v">${esc(d.birthDate)}</div></div>
             <div class="item"><div class="k">出生地</div><div class="v">${esc(d.birthPlace)}</div></div>
-            <div class="item"><div class="k">当前车队</div><div class="v">${esc(d.team)}</div></div>
+            <div class="item"><div class="k">当前车队</div><div class="v">${TEAM_ID_BY_NAME[d.team] ? '<a class="detail-link" href="detail.html?type=teams&id=' + TEAM_ID_BY_NAME[d.team] + '">' + esc(d.team) + '</a>' : esc(d.team)}</div></div>
             <div class="item"><div class="k">F1 出道</div><div class="v">${esc(d.debutYear)} 年</div></div>
             <div class="item"><div class="k">世界冠军</div><div class="v">${esc(d.championships)}</div></div>
           </div>
@@ -283,10 +309,24 @@
       </div>`;
   }
 
+  // ---------- 列表页搜索过滤 ----------
+  function initSearch() {
+    const input = document.getElementById("search");
+    if (!input) return;
+    const grid = document.getElementById("grid");
+    input.addEventListener("input", function () {
+      const q = this.value.trim().toLowerCase();
+      Array.prototype.forEach.call(grid.children, function (el) {
+        el.style.display = (q === "" || el.textContent.toLowerCase().indexOf(q) !== -1) ? "" : "none";
+      });
+    });
+  }
+
   // ---------- 入口 ----------
   if (document.body.dataset.page === "detail") {
     renderDetail();
   } else {
     renderGrid();
+    initSearch();
   }
 })();

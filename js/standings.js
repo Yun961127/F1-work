@@ -50,13 +50,31 @@
         var list = table.StandingsLists && table.StandingsLists[0];
         if (!list) throw new Error("本赛季暂无积分数据");
 
-        $("#season-info").textContent =
-          list.season + " 赛季 · 第 " + list.round + " 轮后";
+        var season = list.season;
+        var round = parseInt(list.round, 10);
+        var rows = type === "drivers"
+          ? (list.DriverStandings || [])
+          : (list.ConstructorStandings || []);
+
+        $("#season-info").textContent = season + " 赛季 · 第 " + round + " 轮后";
         $("#updated").textContent =
           "最后更新：" + new Date().toLocaleTimeString("zh-TW", { hour12: false });
 
-        if (type === "drivers") renderDrivers(list.DriverStandings || []);
-        else renderConstructors(list.ConstructorStandings || []);
+        // 再取上一轮积分，计算名次变化（↑↓）
+        if (round > 1) {
+          fetch(url + "?round=" + (round - 1))
+            .then(function (r2) { return r2.json(); })
+            .then(function (d2) {
+              var l2 = d2.MRData.StandingsTable.StandingsLists[0];
+              var prev = l2
+                ? (type === "drivers" ? l2.DriverStandings : l2.ConstructorStandings)
+                : null;
+              renderStandings(type, rows, prev);
+            })
+            .catch(function () { renderStandings(type, rows, null); });
+        } else {
+          renderStandings(type, rows, null);
+        }
       })
       .catch(function (e) {
         $("#tbody").innerHTML = "";
@@ -66,35 +84,71 @@
       });
   }
 
-  function renderDrivers(rows) {
+  function renderStandings(type, rows, prev) {
+    // prev: 上一轮的行，用于计算名次变化
+    var prevMap = {};
+    if (prev) {
+      prev.forEach(function (p) {
+        var id = type === "drivers" ? p.Driver.driverId : p.Constructor.constructorId;
+        prevMap[id] = parseInt(p.position, 10);
+      });
+    }
+    if (type === "drivers") renderDrivers(rows, prevMap);
+    else renderConstructors(rows, prevMap);
+  }
+
+  // 名次变化标记：之前名次 > 现在名次 = 上升
+  function arrowCell(curPos, prevPos) {
+    if (prevPos == null || prevPos === curPos) {
+      return '<span class="arrow flat">–</span>';
+    }
+    if (prevPos > curPos) return '<span class="arrow up">▲ ' + (prevPos - curPos) + '</span>';
+    return '<span class="arrow down">▼ ' + (curPos - prevPos) + '</span>';
+  }
+
+  function renderDrivers(rows, prevMap) {
+    var lead = rows.length ? parseInt(rows[0].points, 10) : 0;
     $("#thead").innerHTML =
       '<tr><th>排名</th><th>车手</th><th>车队</th><th class="num">积分</th><th class="num">胜场</th></tr>';
     $("#tbody").innerHTML = rows.map(function (r) {
       var team = (r.Constructors && r.Constructors[0] && r.Constructors[0].name) || "—";
       var num = r.Driver.permanentNumber || "—";
+      var cur = parseInt(r.position, 10);
+      var gap = lead - parseInt(r.points, 10);
+      var gapText = cur === 1
+        ? '<span class="gap lead">领跑</span>'
+        : '<span class="gap">−' + gap + '</span>';
       return (
         '<tr>' +
-        '<td class="pos pos-' + esc(r.position) + '">' + esc(r.position) + '</td>' +
+        '<td class="pos pos-' + esc(r.position) + '">' + esc(r.position) + ' ' +
+        arrowCell(cur, prevMap[r.Driver.driverId]) + '</td>' +
         '<td><b>' + esc(r.Driver.givenName) + ' ' + esc(r.Driver.familyName) + '</b>' +
         '<span class="num-badge">#' + esc(num) + '</span></td>' +
         '<td>' + esc(team) + '</td>' +
-        '<td class="num pts">' + esc(r.points) + '</td>' +
+        '<td class="num pts">' + esc(r.points) + ' ' + gapText + '</td>' +
         '<td class="num">' + esc(r.wins) + '</td>' +
         '</tr>'
       );
     }).join("");
   }
 
-  function renderConstructors(rows) {
+  function renderConstructors(rows, prevMap) {
+    var lead = rows.length ? parseInt(rows[0].points, 10) : 0;
     $("#thead").innerHTML =
       '<tr><th>排名</th><th>车队</th><th>国籍</th><th class="num">积分</th><th class="num">胜场</th></tr>';
     $("#tbody").innerHTML = rows.map(function (r) {
+      var cur = parseInt(r.position, 10);
+      var gap = lead - parseInt(r.points, 10);
+      var gapText = cur === 1
+        ? '<span class="gap lead">领跑</span>'
+        : '<span class="gap">−' + gap + '</span>';
       return (
         '<tr>' +
-        '<td class="pos pos-' + esc(r.position) + '">' + esc(r.position) + '</td>' +
+        '<td class="pos pos-' + esc(r.position) + '">' + esc(r.position) + ' ' +
+        arrowCell(cur, prevMap[r.Constructor.constructorId]) + '</td>' +
         '<td><b>' + esc(r.Constructor.name) + '</b></td>' +
         '<td>' + esc(nat(r.Constructor.nationality)) + '</td>' +
-        '<td class="num pts">' + esc(r.points) + '</td>' +
+        '<td class="num pts">' + esc(r.points) + ' ' + gapText + '</td>' +
         '<td class="num">' + esc(r.wins) + '</td>' +
         '</tr>'
       );

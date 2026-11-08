@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>赛程与结果 · F1 档案库</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html">F1<span>档案库</span></a>
+    <nav class="site-nav">
+      <a href="standings.html">排行榜</a>
+      <a href="schedule.html" class="active">赛程</a>
+      <a href="teams.html">车队历史</a>
+      <a href="drivers.html">车手历史</a>
+      <a href="retired.html">退役车手</a>
+      <a href="moments.html">历史名场面</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div class="page-head">
+      <div class="breadcrumb"><a href="index.html">首页</a> / 赛程</div>
+      <h1>赛程与比赛结果</h1>
+      <p>全年赛程来自 Jolpica F1 API。已结束的比赛显示前三名，未来的比赛显示开赛日期。</p>
+    </div>
+
+    <div class="standings-meta">
+      <span id="season-info">加载中…</span>
+      <span id="updated"></span>
+      <button class="btn" id="refresh">刷新</button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>轮次</th><th>日期</th><th>大奖赛</th><th>赛道</th><th>结果</th></tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="error-box" id="error" hidden></div>
+  </main>
+
+  <footer>F1 档案库 · 赛程数据来源：Jolpica F1 API</footer>
+  <script src="js/common.js"></script>
+  <script src="js/schedule.js"></script>
+</body>
+</html>
