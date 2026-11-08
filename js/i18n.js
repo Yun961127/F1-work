@@ -1,10 +1,10 @@
 // ============================================================
-// F1 档案库 —— 中文译名对照表（繁体）
-// 供排行榜、赛程等 API 数据页共享使用。
+// F1 檔案庫 —— 中文譯名對照表（繁體）
+// 供排行榜、賽程等 API 數據頁共享使用。
 // ============================================================
 
 window.F1_ZH = {
-  // 车手译名（key = API 返回的 givenName + familyName）
+  // 車手譯名（key = API 返回的 givenName + familyName）
   drivers: {
     "Andrea Kimi Antonelli": "安德烈亞·基米·安東內利",
     "Kimi Antonelli": "安德烈亞·基米·安東內利",
@@ -12,8 +12,8 @@ window.F1_ZH = {
     "Lewis Hamilton": "路易斯·漢米爾頓",
     "George Russell": "喬治·羅素",
     "Charles Leclerc": "夏爾·勒克萊爾",
-    "Lando Norris": "蘭多·諾里斯",
-    "Oscar Piastri": "奧斯卡·皮亞斯特里",
+    "Lando Norris": "蘭多·諾裡斯",
+    "Oscar Piastri": "奧斯卡·皮亞斯特裡",
     "Isack Hadjar": "伊薩克·哈賈爾",
     "Liam Lawson": "利亞姆·勞森",
     "Yuki Tsunoda": "角田裕毅",
@@ -45,10 +45,10 @@ window.F1_ZH = {
     "Mika Häkkinen": "米卡·哈基寧",
     "Nigel Mansell": "尼格爾·曼塞爾",
     "Daniel Ricciardo": "丹尼爾·里卡多",
-    "Juan Manuel Fangio": "胡安·曼努埃爾·范吉奧"
+    "Juan Manuel Fangio": "胡安·曼努埃爾·範吉奧"
   },
 
-  // 车队译名（key = API 返回的车队名）
+  // 車隊譯名（key = API 返回的車隊名）
   teams: {
     "Red Bull": "紅牛",
     "Red Bull Racing": "紅牛",
@@ -68,7 +68,7 @@ window.F1_ZH = {
     "Cadillac F1 Team": "凱迪拉克"
   },
 
-  // 大奖赛译名（key = API raceName）
+  // 大獎賽譯名（key = API raceName）
   races: {
     "Australian Grand Prix": "澳洲大獎賽",
     "Chinese Grand Prix": "中國大獎賽",
@@ -95,7 +95,7 @@ window.F1_ZH = {
     "Abu Dhabi Grand Prix": "阿布達比大獎賽"
   },
 
-  // 赛道译名（key = API circuitName）
+  // 賽道譯名（key = API circuitName）
   circuits: {
     "Albert Park Grand Prix Circuit": "亞伯特公園賽道",
     "Shanghai International Circuit": "上海國際賽道",
@@ -110,19 +110,19 @@ window.F1_ZH = {
     "Hungaroring": "匈格羅寧賽道",
     "Circuit Park Zandvoort": "贊德沃特賽道",
     "Autodromo Nazionale di Monza": "蒙札賽道",
-    "Madring": "馬德里賽道",
+    "Madring": "馬德裡賽道",
     "Baku City Circuit": "巴庫城市賽道",
     "Sepang International Circuit": "雪邦賽道",
     "Marina Bay Street Circuit": "濱海灣街道賽道",
     "Circuit of the Americas": "美洲賽道",
-    "Autódromo Hermanos Rodríguez": "羅德里格斯兄弟賽道",
+    "Autódromo Hermanos Rodríguez": "羅德裡格斯兄弟賽道",
     "Autódromo José Carlos Pace": "英特拉格斯賽道",
     "Las Vegas Strip Street Circuit": "拉斯維加斯街道賽道",
     "Lusail International Circuit": "羅賽爾國際賽道",
     "Yas Marina Circuit": "亞斯碼頭賽道"
   },
 
-  // 国家译名
+  // 國家譯名
   nations: {
     Australia: "澳洲", China: "中國", Japan: "日本", USA: "美國", Canada: "加拿大",
     Monaco: "摩納哥", Spain: "西班牙", Austria: "奧地利", UK: "英國", Belgium: "比利時",

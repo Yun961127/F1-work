@@ -1,6 +1,6 @@
 // ============================================================
-// F1 档案库 —— 渲染逻辑
-// 读取 js/data.js 中的 F1_DATA，渲染列表与详情。
+// F1 檔案庫 —— 渲染邏輯
+// 讀取 js/data.js 中的 F1_DATA，渲染列表與詳情。
 // ============================================================
 
 (function () {
@@ -8,10 +8,10 @@
 
   const DATA = window.F1_DATA;
   const TYPE_NAMES = {
-    teams: "车队历史",
-    drivers: "车手历史",
-    retired: "退役车手",
-    moments: "历史名场面"
+    teams: "車隊歷史",
+    drivers: "車手歷史",
+    retired: "退役車手",
+    moments: "歷史名場面"
   };
 
   // ---------- 工具 ----------
@@ -22,7 +22,7 @@
       .replace(/>/g, "&gt;");
   }
 
-  // 名称 + 官方中文译名，例如「Max Verstappen（馬克斯・維斯塔潘）」
+  // 名稱 + 官方中文譯名，例如「Max Verstappen（馬克斯・維斯塔潘）」
   function withZh(name, dict) {
     const zh = dict && dict[name];
     return zh
@@ -32,7 +32,7 @@
   function teamName(t) { return withZh(t.name, window.F1_ZH && window.F1_ZH.teams); }
   function driverName(d) { return withZh(d.name, window.F1_ZH && window.F1_ZH.drivers); }
 
-  // 车队三字缩写（用于无图标时的占位图）
+  // 車隊三字縮寫（用於無圖標時的佔位圖）
   const TEAM_CODE = {
     "red-bull": "RBR",
     "ferrari": "FER",
@@ -47,7 +47,7 @@
     "cadillac": "CAD"
   };
 
-  // 车队名称 -> 队色（让车手占位图也显示所属车队颜色）
+  // 車隊名稱 -> 隊色（讓車手佔位圖也顯示所屬車隊顏色）
   const TEAM_COLOR = {
     "Red Bull": "#3671C6",
     "Ferrari": "#E8002D",
@@ -62,7 +62,7 @@
     "Cadillac": "#C5B47D"
   };
 
-  // 车队名称 -> 车队 id（用于详情页互链）
+  // 車隊名稱 -> 車隊 id（用於詳情頁互鏈）
   const TEAM_ID_BY_NAME = {
     "Red Bull": "red-bull",
     "Ferrari": "ferrari",
@@ -77,7 +77,7 @@
     "Cadillac": "cadillac"
   };
 
-  // 根据车队 id 找出当前阵容（用于车队详情页显示车手链接）
+  // 根據車隊 id 找出當前陣容（用於車隊詳情頁顯示車手鍊接）
   function driversOfTeam(teamId) {
     return DATA.drivers.filter(function (d) {
       return TEAM_ID_BY_NAME[d.team] === teamId;
@@ -88,7 +88,7 @@
     return '<a class="detail-link" href="detail.html?type=drivers&id=' + d.id + '">' + esc(d.name) + '</a>';
   }
 
-  // 车队图标：有 img/teams/{id}.png 则显示图片，否则显示「队色 + 缩写」占位圆标
+  // 車隊圖標：有 img/teams/{id}.png 則顯示圖片，否則顯示「隊色 + 縮寫」佔位圓標
   function teamLogo(t, size) {
     const code = TEAM_CODE[t.id] || t.name.slice(0, 3).toUpperCase();
     return `
@@ -98,7 +98,7 @@
       </span>`;
   }
 
-  // 现役车手照片：有 img/drivers/{id}.jpg 则显示，否则显示「队色 + 车号」占位
+  // 現役車手照片：有 img/drivers/{id}.jpg 則顯示，否則顯示「隊色 + 車號」佔位
   function driverPhoto(d, size) {
     const color = TEAM_COLOR[d.team] || "#3a3e4e";
     return `
@@ -108,7 +108,7 @@
       </span>`;
   }
 
-  // 退役车手照片：无图片时显示「金色 + 姓名首字母」占位
+  // 退役車手照片：無圖片時顯示「金色 + 姓名首字母」佔位
   function retiredPhoto(r, size) {
     const initials = r.name.split(" ").map(function (w) { return w.charAt(0); }).join("").slice(0, 2).toUpperCase();
     return `
@@ -118,7 +118,7 @@
       </span>`;
   }
 
-  // ---------- 列表页卡片 ----------
+  // ---------- 列表頁卡片 ----------
   function teamCard(t) {
     return `
       <a class="card" href="detail.html?type=teams&id=${t.id}" style="--accent:${t.color}">
@@ -129,9 +129,9 @@
             <span class="badge">${esc(t.country)}</span>
           </div>
         </div>
-        <p class="sub">${esc(t.firstSeason)} 年参赛 · ${esc(t.engine)}</p>
-        <p class="row"><b>车队冠军：</b>${esc(t.constructorTitles)}</p>
-        <p class="row"><b>当前车手：</b>${esc(t.drivers)}</p>
+        <p class="sub">${esc(t.firstSeason)} 年參賽 · ${esc(t.engine)}</p>
+        <p class="row"><b>車隊冠軍：</b>${esc(t.constructorTitles)}</p>
+        <p class="row"><b>當前車手：</b>${esc(t.drivers)}</p>
       </a>`;
   }
 
@@ -145,9 +145,9 @@
             <span class="driver-number">#${esc(d.number)} · ${esc(d.country)}</span>
           </div>
         </div>
-        <p class="sub">${esc(d.birthDate.substring(0, 4))} 年生 · 出道于 ${esc(d.debutYear)}</p>
-        <p class="row"><b>当前车队：</b>${esc(d.team)}</p>
-        <p class="row"><b>世界冠军：</b>${esc(d.championships)}</p>
+        <p class="sub">${esc(d.birthDate.substring(0, 4))} 年生 · 出道於 ${esc(d.debutYear)}</p>
+        <p class="row"><b>當前車隊：</b>${esc(d.team)}</p>
+        <p class="row"><b>世界冠軍：</b>${esc(d.championships)}</p>
       </a>`;
   }
 
@@ -162,8 +162,8 @@
           </div>
         </div>
         <p class="sub">${esc(r.birthYear)} 年生</p>
-        <p class="row"><b>世界冠军：</b>${esc(r.championships)}</p>
-        <p class="row"><b>分站冠军：</b>${esc(r.wins)}</p>
+        <p class="row"><b>世界冠軍：</b>${esc(r.championships)}</p>
+        <p class="row"><b>分站冠軍：</b>${esc(r.wins)}</p>
       </a>`;
   }
 
@@ -182,7 +182,7 @@
     grid.innerHTML = html;
   }
 
-  // ---------- 名场面（列表页直接展示全文） ----------
+  // ---------- 名場面（列表頁直接展示全文） ----------
   function momentCard(m) {
     return `
       <article class="moment-card">
@@ -190,11 +190,11 @@
         <h2>${esc(m.title)}</h2>
         <div class="event">📍 ${esc(m.event)}</div>
         <p class="summary">${esc(m.summary)}</p>
-        <div class="significance"><b>历史意义：</b>${esc(m.significance)}</div>
+        <div class="significance"><b>歷史意義：</b>${esc(m.significance)}</div>
       </article>`;
   }
 
-  // ---------- 详情页 ----------
+  // ---------- 詳情頁 ----------
   function renderDetail() {
     const params = new URLSearchParams(window.location.search);
     const type = params.get("type");
@@ -205,12 +205,12 @@
     const list = DATA[type] || [];
     const item = list.find(function (i) { return i.id === id; });
     if (!item) {
-      root.innerHTML = `<div class="container"><p>找不到该条目。</p><a class="back-link" href="index.html">← 返回首页</a></div>`;
+      root.innerHTML = `<div class="container"><p>找不到該條目。</p><a class="back-link" href="index.html">← 返回首頁</a></div>`;
       return;
     }
 
-    document.title = item.name || item.title || "F1 档案库";
-    const crumbs = `<a href="index.html">首页</a> / <a href="${type}.html">${TYPE_NAMES[type] || ""}</a> / ${esc(item.name || item.title)}`;
+    document.title = item.name || item.title || "F1 檔案庫";
+    const crumbs = `<a href="index.html">首頁</a> / <a href="${type}.html">${TYPE_NAMES[type] || ""}</a> / ${esc(item.name || item.title)}`;
     document.getElementById("breadcrumb").innerHTML = crumbs;
 
     if (type === "teams") root.innerHTML = teamDetail(item);
@@ -221,7 +221,7 @@
 
   function teamDetail(t) {
     return `
-      <a class="back-link" href="teams.html">← 返回车队列表</a>
+      <a class="back-link" href="teams.html">← 返回車隊列表</a>
       <div class="detail-card">
         <div class="detail-hero" style="background:linear-gradient(135deg, ${t.color}22, transparent 55%), var(--bg-soft)">
           <div class="hero-flex">
@@ -234,16 +234,16 @@
         </div>
         <div class="detail-body">
           <p>${esc(t.bio)}</p>
-          <div class="section-title">基本资料</div>
+          <div class="section-title">基本資料</div>
           <div class="kv">
-            <div class="item"><div class="k">国家</div><div class="v">${esc(t.country)}</div></div>
+            <div class="item"><div class="k">國家</div><div class="v">${esc(t.country)}</div></div>
             <div class="item"><div class="k">基地</div><div class="v">${esc(t.base)}</div></div>
-            <div class="item"><div class="k">首次参赛</div><div class="v">${esc(t.firstSeason)}</div></div>
-            <div class="item"><div class="k">动力单元</div><div class="v">${esc(t.engine)}</div></div>
-            <div class="item"><div class="k">车队冠军</div><div class="v">${esc(t.constructorTitles)}</div></div>
-            <div class="item"><div class="k">当前车手</div><div class="v">${driversOfTeam(t.id).map(driverLink).join("、") || esc(t.drivers)}</div></div>
+            <div class="item"><div class="k">首次參賽</div><div class="v">${esc(t.firstSeason)}</div></div>
+            <div class="item"><div class="k">動力單元</div><div class="v">${esc(t.engine)}</div></div>
+            <div class="item"><div class="k">車隊冠軍</div><div class="v">${esc(t.constructorTitles)}</div></div>
+            <div class="item"><div class="k">當前車手</div><div class="v">${driversOfTeam(t.id).map(driverLink).join("、") || esc(t.drivers)}</div></div>
           </div>
-          <div class="section-title">代表性车手</div>
+          <div class="section-title">代表性車手</div>
           <div class="chip-list">
             ${t.notable.map(function (n) { return `<span class="chip">${esc(n)}</span>`; }).join("")}
           </div>
@@ -253,7 +253,7 @@
 
   function driverDetail(d) {
     return `
-      <a class="back-link" href="drivers.html">← 返回车手列表</a>
+      <a class="back-link" href="drivers.html">← 返回車手列表</a>
       <div class="detail-card">
         <div class="detail-hero">
           <div class="hero-flex">
@@ -266,15 +266,15 @@
         </div>
         <div class="detail-body">
           <p>${esc(d.bio)}</p>
-          <div class="section-title">基本资料</div>
+          <div class="section-title">基本資料</div>
           <div class="kv">
-            <div class="item"><div class="k">车号</div><div class="v">#${esc(d.number)}</div></div>
-            <div class="item"><div class="k">国籍</div><div class="v">${esc(d.country)}</div></div>
+            <div class="item"><div class="k">車號</div><div class="v">#${esc(d.number)}</div></div>
+            <div class="item"><div class="k">國籍</div><div class="v">${esc(d.country)}</div></div>
             <div class="item"><div class="k">出生日期</div><div class="v">${esc(d.birthDate)}</div></div>
             <div class="item"><div class="k">出生地</div><div class="v">${esc(d.birthPlace)}</div></div>
-            <div class="item"><div class="k">当前车队</div><div class="v">${TEAM_ID_BY_NAME[d.team] ? '<a class="detail-link" href="detail.html?type=teams&id=' + TEAM_ID_BY_NAME[d.team] + '">' + esc(d.team) + '</a>' : esc(d.team)}</div></div>
+            <div class="item"><div class="k">當前車隊</div><div class="v">${TEAM_ID_BY_NAME[d.team] ? '<a class="detail-link" href="detail.html?type=teams&id=' + TEAM_ID_BY_NAME[d.team] + '">' + esc(d.team) + '</a>' : esc(d.team)}</div></div>
             <div class="item"><div class="k">F1 出道</div><div class="v">${esc(d.debutYear)} 年</div></div>
-            <div class="item"><div class="k">世界冠军</div><div class="v">${esc(d.championships)}</div></div>
+            <div class="item"><div class="k">世界冠軍</div><div class="v">${esc(d.championships)}</div></div>
           </div>
         </div>
       </div>`;
@@ -282,7 +282,7 @@
 
   function retiredDetail(r) {
     return `
-      <a class="back-link" href="retired.html">← 返回退役车手列表</a>
+      <a class="back-link" href="retired.html">← 返回退役車手列表</a>
       <div class="detail-card">
         <div class="detail-hero">
           <div class="hero-flex">
@@ -297,8 +297,8 @@
           <p>${esc(r.bio)}</p>
           <div class="section-title">生涯成就</div>
           <div class="kv">
-            <div class="item"><div class="k">世界冠军</div><div class="v">${esc(r.championships)}</div></div>
-            <div class="item"><div class="k">分站冠军</div><div class="v">${esc(r.wins)}</div></div>
+            <div class="item"><div class="k">世界冠軍</div><div class="v">${esc(r.championships)}</div></div>
+            <div class="item"><div class="k">分站冠軍</div><div class="v">${esc(r.wins)}</div></div>
           </div>
         </div>
       </div>`;
@@ -306,7 +306,7 @@
 
   function momentDetail(m) {
     return `
-      <a class="back-link" href="moments.html">← 返回名场面列表</a>
+      <a class="back-link" href="moments.html">← 返回名場面列表</a>
       <div class="detail-card">
         <div class="detail-hero">
           <h1>${esc(m.title)}</h1>
@@ -314,12 +314,12 @@
         </div>
         <div class="detail-body">
           <p>${esc(m.summary)}</p>
-          <div class="significance"><b>历史意义：</b>${esc(m.significance)}</div>
+          <div class="significance"><b>歷史意義：</b>${esc(m.significance)}</div>
         </div>
       </div>`;
   }
 
-  // ---------- 列表页搜索过滤 ----------
+  // ---------- 列表頁搜索過濾 ----------
   function initSearch() {
     const input = document.getElementById("search");
     if (!input) return;

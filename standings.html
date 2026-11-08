@@ -3,36 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>排行榜 · F1 档案库</title>
+  <title>排行榜 · F1 檔案庫</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body data-page="standings">
   <header class="site-header">
-    <a class="brand" href="index.html">F1<span>档案库</span></a>
+    <a class="brand" href="index.html">F1<span>檔案庫</span></a>
     <nav class="site-nav">
       <a href="standings.html" class="active">排行榜</a>
-      <a href="schedule.html">赛程</a>
-      <a href="teams.html">车队历史</a>
-      <a href="drivers.html">车手历史</a>
-      <a href="retired.html">退役车手</a>
-      <a href="moments.html">历史名场面</a>
+      <a href="schedule.html">賽程</a>
+      <a href="teams.html">車隊歷史</a>
+      <a href="drivers.html">車手歷史</a>
+      <a href="retired.html">退役車手</a>
+      <a href="moments.html">歷史名場面</a>
     </nav>
   </header>
 
   <main class="container">
     <div class="page-head">
-      <div class="breadcrumb"><a href="index.html">首页</a> / 排行榜</div>
-      <h1>车手与车队排行榜</h1>
-      <p>数据来自 Jolpica F1 API，每场比赛结束后更新。点击「刷新」或等待自动刷新（每 60 秒）获取最新积分。</p>
+      <div class="breadcrumb"><a href="index.html">首頁</a> / 排行榜</div>
+      <h1>車手與車隊排行榜</h1>
+      <p>數據來自 Jolpica F1 API，每場比賽結束後更新。點擊「刷新」或等待自動刷新（每 60 秒）獲取最新積分。</p>
     </div>
 
     <div class="standings-tabs">
-      <button class="tab active" data-type="drivers">车手排行榜</button>
-      <button class="tab" data-type="constructors">车队积分榜</button>
+      <button class="tab active" data-type="drivers">車手排行榜</button>
+      <button class="tab" data-type="constructors">車隊積分榜</button>
     </div>
 
     <div class="standings-meta">
-      <span id="season-info">加载中…</span>
+      <span id="season-info">載入中…</span>
       <span id="updated"></span>
       <button class="btn" id="refresh">刷新</button>
     </div>
@@ -47,7 +47,7 @@
     <div class="error-box" id="error" hidden></div>
   </main>
 
-  <footer>F1 档案库 · 积分数据来源：Jolpica F1 API</footer>
+  <footer>F1 檔案庫 · 積分數據來源：Jolpica F1 API</footer>
   <script src="js/common.js"></script>
   <script src="js/i18n.js"></script>
   <script src="js/standings.js"></script>

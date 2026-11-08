@@ -1,9 +1,9 @@
 // ============================================================
-// F1 档案库 —— 赛程与比赛结果（Jolpica F1 API）
-// 说明：
-// 1. 站名、赛道、国家直接显示中文译名（映射见 js/i18n.js）。
-// 2. 已完赛显示前三名（中文译名），未来比赛显示开赛日期。
-// 3. current/results 端点数据不全时，逐轮补查缺失轮次的结果。
+// F1 檔案庫 —— 賽程與比賽結果（Jolpica F1 API）
+// 說明：
+// 1. 站名、賽道、國家直接顯示中文譯名（映射見 js/i18n.js）。
+// 2. 已完賽顯示前三名（中文譯名），未來比賽顯示開賽日期。
+// 3. current/results 端點數據不全時，逐輪補查缺失輪次的結果。
 // ============================================================
 
 (function () {
@@ -22,7 +22,7 @@
     return fallback;
   }
 
-  // 车手译名只取「姓氏」部分，例如 馬克斯・維斯塔潘 -> 維斯塔潘
+  // 車手譯名只取「姓氏」部分，例如 馬克斯・維斯塔潘 -> 維斯塔潘
   function driverShortZh(given, family) {
     var full = given + " " + family;
     var t = zh(window.F1_ZH.drivers, full, null);
@@ -44,7 +44,7 @@
 
   function load() {
     $("#error").hidden = true;
-    $("#tbody").innerHTML = '<tr><td colspan="5" class="loading">加载中…</td></tr>';
+    $("#tbody").innerHTML = '<tr><td colspan="5" class="loading">載入中…</td></tr>';
 
     Promise.all([
       fetch(API_BASE + ".json?limit=30").then(function (r) { return r.json(); }),
@@ -59,7 +59,7 @@
         });
 
         var today = new Date().toISOString().slice(0, 10);
-        // 找出「已过日期但结果缺失」的轮次，逐轮补查
+        // 找出「已過日期但結果缺失」的輪次，逐輪補查
         var missing = races
           .filter(function (r) { return !resultsByRound[r.round] && r.date && r.date <= today; })
           .map(function (r) { return r.round; });
@@ -85,15 +85,15 @@
       .catch(function (e) {
         $("#tbody").innerHTML = "";
         $("#error").hidden = false;
-        $("#error").textContent = "加载失败：" + e.message + "（请检查网络后点击刷新重试）";
+        $("#error").textContent = "載入失敗：" + e.message + "（請檢查網路後點擊刷新重試）";
         $("#updated").textContent = "";
       });
   }
 
   function renderAll(races, resultsByRound, today, season) {
-    $("#season-info").textContent = season + " 赛季 · 共 " + races.length + " 站";
+    $("#season-info").textContent = season + " 賽季 · 共 " + races.length + " 站";
     $("#updated").textContent =
-      "最后更新：" + new Date().toLocaleTimeString("zh-TW", { hour12: false });
+      "最後更新：" + new Date().toLocaleTimeString("zh-TW", { hour12: false });
     $("#tbody").innerHTML = races.map(function (r) {
       return raceRow(r, resultsByRound[r.round], today);
     }).join("");
@@ -114,9 +114,9 @@
       }).join(" ");
       resultHtml = '<span class="results-line">' + top3 + '</span>';
     } else if (r.date && r.date > today) {
-      resultHtml = '<span class="upcoming">' + fmtMonthDay(r.date) + " 开赛</span>";
+      resultHtml = '<span class="upcoming">' + fmtMonthDay(r.date) + " 開賽</span>";
     } else {
-      resultHtml = '<span class="upcoming">结果待公布</span>';
+      resultHtml = '<span class="upcoming">結果待公佈</span>';
     }
 
     return (

@@ -1,6 +1,6 @@
 // ============================================================
-// F1 档案库 —— 通用元件：回到顶部按钮
-// 所有页面共用。
+// F1 檔案庫 —— 通用元件：回到頂部按鈕
+// 所有頁面共用。
 // ============================================================
 
 (function () {
@@ -8,9 +8,9 @@
 
   var btn = document.createElement("button");
   btn.className = "back-top";
-  btn.setAttribute("aria-label", "回到顶部");
+  btn.setAttribute("aria-label", "回到頂部");
   btn.innerHTML = "&#8593;";
-  btn.title = "回到顶部";
+  btn.title = "回到頂部";
   btn.addEventListener("click", function () {
     window.scrollTo({ top: 0, behavior: "smooth" });
   });

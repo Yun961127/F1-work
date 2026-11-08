@@ -1,9 +1,9 @@
-图片放置规则
+圖片放置規則
 ============================================
-把图片放进对应文件夹后，刷新网页即可自动显示。
-没有图片时，网站会自动显示「队色+缩写 / 车号」的占位图，不会出错。
+把圖片放進對應文件夾後，刷新網頁即可自動顯示。
+沒有圖片時，網站會自動顯示「隊色+縮寫 / 車號」的佔位圖，不會出錯。
 
-1) 车队图标  -> 放到 img/teams/ 文件夹，文件名用 .png
+1) 車隊圖標  -> 放到 img/teams/ 文件夾，文件名用 .png
    red-bull.png        Red Bull Racing
    ferrari.png         Ferrari
    mclaren.png         McLaren
@@ -16,8 +16,8 @@
    audi.png            Audi
    cadillac.png        Cadillac
 
-2) 车手照片  -> 放到 img/drivers/ 文件夹，文件名用 .jpg
-   【现役车手】
+2) 車手照片  -> 放到 img/drivers/ 文件夾，文件名用 .jpg
+   【現役車手】
    kimi-antonelli.jpg      Kimi Antonelli
    max-verstappen.jpg      Max Verstappen
    lewis-hamilton.jpg      Lewis Hamilton
@@ -43,7 +43,7 @@
    valtteri-bottas.jpg     Valtteri Bottas
    sergio-perez.jpg        Sergio Pérez
 
-   【退役车手】
+   【退役車手】
    michael-schumacher.jpg  Michael Schumacher
    ayrton-senna.jpg        Ayrton Senna
    alain-prost.jpg         Alain Prost
@@ -57,4 +57,4 @@
    nigel-mansell.jpg       Nigel Mansell
    daniel-ricciardo.jpg    Daniel Ricciardo
 
-注意：车队 logo 与车手照片受版权保护，请使用你拥有使用权的图片。
+注意：車隊 logo 與車手照片受版權保護，請使用你擁有使用權的圖片。

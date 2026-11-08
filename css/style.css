@@ -1,4 +1,4 @@
-/* ============ F1 档案库 —— 全局样式 ============ */
+/* ============ F1 檔案庫 —— 全局樣式 ============ */
 :root {
   --bg: #0e0f13;
   --bg-soft: #17181f;
@@ -7,7 +7,7 @@
   --border: #2a2d3a;
   --text: #e9e9ee;
   --text-dim: #9aa0ae;
-  --accent: #e10600;      /* F1 红 */
+  --accent: #e10600;      /* F1 紅 */
   --accent-soft: rgba(225, 6, 0, 0.12);
   --radius: 14px;
 }
@@ -27,7 +27,7 @@ body {
 
 a { color: inherit; text-decoration: none; }
 
-/* ---------- 顶部导航 ---------- */
+/* ---------- 頂部導航 ---------- */
 .site-header {
   position: sticky;
   top: 0;
@@ -59,7 +59,7 @@ a { color: inherit; text-decoration: none; }
 .site-nav a:hover { color: #fff; background: var(--bg-soft); }
 .site-nav a.active { color: #fff; background: var(--accent-soft); }
 
-/* ---------- 布局容器 ---------- */
+/* ---------- 佈局容器 ---------- */
 .container { max-width: 1160px; margin: 0 auto; padding: 32px 24px 72px; }
 
 .page-head { margin-bottom: 28px; }
@@ -74,7 +74,7 @@ a { color: inherit; text-decoration: none; }
 .breadcrumb { font-size: 13px; color: var(--text-dim); margin-bottom: 14px; }
 .breadcrumb a:hover { color: var(--accent); }
 
-/* ---------- 卡片网格 ---------- */
+/* ---------- 卡片網格 ---------- */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
@@ -122,7 +122,7 @@ a { color: inherit; text-decoration: none; }
   margin-left: 8px;
 }
 
-/* 车手号码 */
+/* 車手號碼 */
 .driver-number {
   font-size: 12px;
   font-weight: 800;
@@ -131,7 +131,7 @@ a { color: inherit; text-decoration: none; }
   padding-left: 8px;
 }
 
-/* ---------- 详情页 ---------- */
+/* ---------- 詳情頁 ---------- */
 .detail-card {
   background: var(--card);
   border: 1px solid var(--border);
@@ -190,7 +190,7 @@ a { color: inherit; text-decoration: none; }
 }
 .back-link:hover { color: var(--accent); }
 
-/* ---------- 名场面卡片（列表页直接展示全文） ---------- */
+/* ---------- 名場面卡片（列表頁直接展示全文） ---------- */
 .moment-card {
   background: var(--card);
   border: 1px solid var(--border);
@@ -216,7 +216,7 @@ a { color: inherit; text-decoration: none; }
   font-size: 14px;
 }
 
-/* ---------- 首页 Hero ---------- */
+/* ---------- 首頁 Hero ---------- */
 .hero {
   padding: 76px 24px 48px;
   text-align: center;
@@ -278,7 +278,7 @@ footer {
   .container { padding: 22px 16px 56px; }
 }
 
-/* ---------- 排行榜 / 积分 ---------- */
+/* ---------- 排行榜 / 積分 ---------- */
 .standings-tabs { display: flex; gap: 10px; margin-bottom: 16px; }
 .tab {
   padding: 10px 22px;
@@ -355,7 +355,7 @@ tbody tr:hover { background: var(--card-hover); }
   margin-top: 14px;
 }
 
-/* ---------- 车队图标 / 车手照片 ---------- */
+/* ---------- 車隊圖標 / 車手照片 ---------- */
 .card-head {
   display: flex;
   align-items: center;
@@ -437,7 +437,7 @@ tbody tr:hover { background: var(--card-hover); }
 .search-box:focus { border-color: var(--accent); }
 .search-box::placeholder { color: var(--text-dim); }
 
-/* ---------- 首页倒计时 ---------- */
+/* ---------- 首頁倒計時 ---------- */
 .countdown-box {
   margin: 30px auto 0;
   max-width: 560px;
@@ -462,7 +462,7 @@ tbody tr:hover { background: var(--card-hover); }
 .cd-days b { font-size: 22px; }
 .cd-date { font-size: 13px; color: var(--text-dim); }
 
-/* ---------- 排行榜：名次变化箭头 + 分差 ---------- */
+/* ---------- 排行榜：名次變化箭頭 + 分差 ---------- */
 .arrow { font-size: 11px; margin-left: 4px; white-space: nowrap; }
 .arrow.up { color: #3ddc7b; }
 .arrow.down { color: #ff6a66; }
@@ -480,7 +480,7 @@ tbody tr:hover { background: var(--card-hover); }
   border-radius: 999px;
 }
 
-/* ---------- 赛程表 ---------- */
+/* ---------- 賽程表 ---------- */
 .results-line { display: flex; gap: 10px; flex-wrap: wrap; }
 .results-line .p1 { color: #f5c542; font-weight: 700; }
 .results-line .p2 { color: #c0c8d4; font-weight: 700; }
@@ -489,11 +489,11 @@ tbody tr:hover { background: var(--card-hover); }
 tr.race-today td { background: var(--accent-soft); }
 tr.race-today .race-name { color: #ff6a66; }
 
-/* ---------- 详情页互链 ---------- */
+/* ---------- 詳情頁互鏈 ---------- */
 .detail-link { color: #ff6a66; font-weight: 600; }
 .detail-link:hover { text-decoration: underline; }
 
-/* ---------- 中文译名 ---------- */
+/* ---------- 中文譯名 ---------- */
 .zh {
   color: var(--text-dim);
   font-weight: 500;
@@ -501,7 +501,7 @@ tr.race-today .race-name { color: #ff6a66; }
   letter-spacing: 0;
 }
 
-/* ---------- 回到顶部按钮 ---------- */
+/* ---------- 回到頂部按鈕 ---------- */
 .back-top {
   position: fixed;
   right: 22px;

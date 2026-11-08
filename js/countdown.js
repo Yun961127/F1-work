@@ -1,5 +1,5 @@
 // ============================================================
-// F1 档案库 —— 首页：下一站比赛倒计时（Jolpica F1 API）
+// F1 檔案庫 —— 首頁：下一站比賽倒計時（Jolpica F1 API）
 // ============================================================
 
 (function () {
@@ -36,19 +36,19 @@
       var races = data.MRData.RaceTable.Races || [];
       var today = new Date().toISOString().slice(0, 10);
 
-      // 找到下一场未开始的比赛（今天或之后）
+      // 找到下一場未開始的比賽（今天或之後）
       var next = races.find(function (r) { return r.date && r.date >= today; });
       if (!next) {
-        box.innerHTML = '<span class="cd-label">本赛季赛程已结束</span><span class="cd-race">' +
-          (races.length ? data.MRData.RaceTable.season + " 赛季 · 共 " + races.length + " 站" : "等待新赛季") + '</span>';
+        box.innerHTML = '<span class="cd-label">本賽季賽程已結束</span><span class="cd-race">' +
+          (races.length ? data.MRData.RaceTable.season + " 賽季 · 共 " + races.length + " 站" : "等待新賽季") + '</span>';
         return;
       }
 
       var diff = dayDiff(next.date);
       var diffText;
-      if (diff === 0) diffText = "今天开赛！";
-      else if (diff === 1) diffText = "明天开赛";
-      else diffText = "还有 <b>" + diff + "</b> 天";
+      if (diff === 0) diffText = "今天開賽！";
+      else if (diff === 1) diffText = "明天開賽";
+      else diffText = "還有 <b>" + diff + "</b> 天";
 
       box.innerHTML =
         '<span class="cd-label">下一站</span>' +
@@ -59,6 +59,6 @@
         esc(next.Circuit ? zh(window.F1_ZH.circuits, next.Circuit.circuitName, next.Circuit.circuitName) : "") + '</span>';
     })
     .catch(function () {
-      box.innerHTML = '<span class="cd-label">赛程加载失败，请稍后刷新</span>';
+      box.innerHTML = '<span class="cd-label">賽程載入失敗，請稍後刷新</span>';
     });
 })();
