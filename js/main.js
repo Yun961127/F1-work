@@ -22,12 +22,61 @@
       .replace(/>/g, "&gt;");
   }
 
+  // 车队三字缩写（用于无图标时的占位图）
+  const TEAM_CODE = {
+    "red-bull": "RBR",
+    "ferrari": "FER",
+    "mclaren": "MCL",
+    "mercedes": "MER",
+    "aston-martin": "AMR",
+    "alpine": "ALP",
+    "williams": "WIL",
+    "racing-bulls": "RBF",
+    "haas": "HAS",
+    "audi": "AUD",
+    "cadillac": "CAD"
+  };
+
+  // 车队图标：有 img/teams/{id}.png 则显示图片，否则显示「队色 + 缩写」占位圆标
+  function teamLogo(t, size) {
+    const code = TEAM_CODE[t.id] || t.name.slice(0, 3).toUpperCase();
+    return `
+      <span class="logo-wrap ${size}">
+        <span class="logo-badge" style="--accent:${t.color}">${esc(code)}</span>
+        <img class="logo-img contain-img" src="img/teams/${t.id}.png" alt="${esc(t.name)}" loading="lazy" onerror="this.style.display='none'">
+      </span>`;
+  }
+
+  // 现役车手照片：有 img/drivers/{id}.jpg 则显示，否则显示车号占位
+  function driverPhoto(d, size) {
+    return `
+      <span class="logo-wrap ${size}">
+        <span class="logo-badge" style="--accent:var(--accent)">#${esc(d.number)}</span>
+        <img class="logo-img cover-img" src="img/drivers/${d.id}.jpg" alt="${esc(d.name)}" loading="lazy" onerror="this.style.display='none'">
+      </span>`;
+  }
+
+  // 退役车手照片：无图片时显示姓名首字母占位
+  function retiredPhoto(r, size) {
+    const initials = r.name.split(" ").map(function (w) { return w.charAt(0); }).join("").slice(0, 2).toUpperCase();
+    return `
+      <span class="logo-wrap ${size}">
+        <span class="logo-badge" style="--accent:var(--accent)">${esc(initials)}</span>
+        <img class="logo-img cover-img" src="img/drivers/${r.id}.jpg" alt="${esc(r.name)}" loading="lazy" onerror="this.style.display='none'">
+      </span>`;
+  }
+
   // ---------- 列表页卡片 ----------
   function teamCard(t) {
     return `
       <a class="card" href="detail.html?type=teams&id=${t.id}" style="--accent:${t.color}">
-        <span class="badge">${esc(t.country)}</span>
-        <h3>${esc(t.name)}</h3>
+        <div class="card-head">
+          ${teamLogo(t, "sm")}
+          <div class="card-head-text">
+            <h3>${esc(t.name)}</h3>
+            <span class="badge">${esc(t.country)}</span>
+          </div>
+        </div>
         <p class="sub">${esc(t.firstSeason)} 年参赛 · ${esc(t.engine)}</p>
         <p class="row"><b>车队冠军：</b>${esc(t.constructorTitles)}</p>
         <p class="row"><b>当前车手：</b>${esc(t.drivers)}</p>
@@ -37,9 +86,14 @@
   function driverCard(d) {
     return `
       <a class="card" href="detail.html?type=drivers&id=${d.id}" style="--accent:var(--accent)">
-        <span class="driver-number">#${esc(d.number)}</span>
-        <h3>${esc(d.name)}</h3>
-        <p class="sub">${esc(d.country)} · ${esc(d.birthDate.substring(0, 4))} 年生</p>
+        <div class="card-head">
+          ${driverPhoto(d, "sm")}
+          <div class="card-head-text">
+            <h3>${esc(d.name)}</h3>
+            <span class="driver-number">#${esc(d.number)} · ${esc(d.country)}</span>
+          </div>
+        </div>
+        <p class="sub">${esc(d.birthDate.substring(0, 4))} 年生 · 出道于 ${esc(d.debutYear)}</p>
         <p class="row"><b>当前车队：</b>${esc(d.team)}</p>
         <p class="row"><b>世界冠军：</b>${esc(d.championships)}</p>
       </a>`;
@@ -48,8 +102,13 @@
   function retiredCard(r) {
     return `
       <a class="card" href="detail.html?type=retired&id=${r.id}" style="--accent:var(--accent)">
-        <span class="badge">${esc(r.country)}</span>
-        <h3>${esc(r.name)}</h3>
+        <div class="card-head">
+          ${retiredPhoto(r, "sm")}
+          <div class="card-head-text">
+            <h3>${esc(r.name)}</h3>
+            <span class="badge">${esc(r.country)}</span>
+          </div>
+        </div>
         <p class="sub">${esc(r.birthYear)} 年生</p>
         <p class="row"><b>世界冠军：</b>${esc(r.championships)}</p>
         <p class="row"><b>分站冠军：</b>${esc(r.wins)}</p>
@@ -113,8 +172,13 @@
       <a class="back-link" href="teams.html">← 返回车队列表</a>
       <div class="detail-card">
         <div class="detail-hero" style="background:linear-gradient(135deg, ${t.color}22, transparent 55%), var(--bg-soft)">
-          <h1>${esc(t.name)}</h1>
-          <div class="hero-sub">${esc(t.fullName)} · ${esc(t.country)}</div>
+          <div class="hero-flex">
+            ${teamLogo(t, "lg")}
+            <div>
+              <h1>${esc(t.name)}</h1>
+              <div class="hero-sub">${esc(t.fullName)} · ${esc(t.country)}</div>
+            </div>
+          </div>
         </div>
         <div class="detail-body">
           <p>${esc(t.bio)}</p>
@@ -140,8 +204,13 @@
       <a class="back-link" href="drivers.html">← 返回车手列表</a>
       <div class="detail-card">
         <div class="detail-hero">
-          <h1>#${esc(d.number)} ${esc(d.name)}</h1>
-          <div class="hero-sub">${esc(d.country)} · ${esc(d.birthPlace)} · ${esc(d.debutYear)} 年出道</div>
+          <div class="hero-flex">
+            ${driverPhoto(d, "lg")}
+            <div>
+              <h1>#${esc(d.number)} ${esc(d.name)}</h1>
+              <div class="hero-sub">${esc(d.country)} · ${esc(d.birthPlace)} · ${esc(d.debutYear)} 年出道</div>
+            </div>
+          </div>
         </div>
         <div class="detail-body">
           <p>${esc(d.bio)}</p>
@@ -164,8 +233,13 @@
       <a class="back-link" href="retired.html">← 返回退役车手列表</a>
       <div class="detail-card">
         <div class="detail-hero">
-          <h1>${esc(r.name)}</h1>
-          <div class="hero-sub">${esc(r.country)} · ${esc(r.birthYear)} 年生</div>
+          <div class="hero-flex">
+            ${retiredPhoto(r, "lg")}
+            <div>
+              <h1>${esc(r.name)}</h1>
+              <div class="hero-sub">${esc(r.country)} · ${esc(r.birthYear)} 年生</div>
+            </div>
+          </div>
         </div>
         <div class="detail-body">
           <p>${esc(r.bio)}</p>

@@ -353,3 +353,65 @@ tbody tr:hover { background: var(--card-hover); }
   color: #ff6a66;
   margin-top: 14px;
 }
+
+/* ---------- 车队图标 / 车手照片 ---------- */
+.card-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+.card-head-text { min-width: 0; }
+.card-head h3 { padding-left: 0; }
+.card-head .badge,
+.card-head .driver-number { padding-left: 0; margin-left: 0; }
+
+.logo-wrap {
+  position: relative;
+  flex-shrink: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+.logo-wrap.sm { width: 48px; height: 48px; }
+.logo-wrap.lg { width: 78px; height: 78px; }
+
+.logo-badge {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent, #3a3e4e);
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  border-radius: 50%;
+}
+.logo-wrap.sm .logo-badge { font-size: 15px; }
+.logo-wrap.lg .logo-badge { font-size: 24px; }
+
+.logo-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #fff;
+}
+.contain-img { object-fit: contain; padding: 4px; }
+.cover-img { object-fit: cover; background: #2a2d3a; }
+
+.hero-flex {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.hero-flex h1 { margin: 0; }
+.hero-flex .hero-sub { margin-top: 6px; }
+
+@media (max-width: 560px) {
+  .hero-flex { gap: 14px; }
+  .logo-wrap.lg { width: 60px; height: 60px; }
+  .logo-wrap.lg .logo-badge { font-size: 18px; }
+}
